@@ -1,0 +1,11 @@
+Flask
+yfinance
+pandas
+numpy
+scikit-learn
+keras
+matplotlib
+plotly
+tensorflow
+prophet
+

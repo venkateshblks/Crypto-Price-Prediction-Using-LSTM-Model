@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #272b34;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #chart {
+            margin: 20px auto;
+            width: 80%;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Stock Price Prediction</h1>
+    <form method="POST">
+        <label for="symbol">Enter stock symbol (e.g., BTC-USD):</label>
+        <input type="text" id="symbol" name="symbol" value='BTC-USD' required>
+        <button type="submit">Predict</button>
+    </form>
+    
+    {% if historical_graphJSON %}
+        <div id='historical-chart' class='chart'  style="width: 100%; height: 600px;" ></div>
+        <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+        <script type='text/javascript'>
+            var historicalGraph = {{ historical_graphJSON | safe }};
+            Plotly.plot('historical-chart', historicalGraph.data, historicalGraph.layout);
+        </script>
+    {% endif %}
+
+    {% if prophet_graphJSON %}
+        <div id='prophet-chart' class='chart'   style="width: 100%; height: 600px;" ></div>
+        <script type='text/javascript'>
+            var prophetGraph = {{ prophet_graphJSON | safe }};
+            Plotly.plot('prophet-chart', prophetGraph.data, prophetGraph.layout);
+        </script>
+    {% endif %}
+</body>
+</html>
