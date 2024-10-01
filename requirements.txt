@@ -6,5 +6,4 @@ scikit-learn
 plotly
 tensorflow-cpu
 prophet
-gunicorn
 
