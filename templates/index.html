@@ -1,54 +1,170 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Price Prediction</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        clifford: "#da373d",
+                    },
+                },
+            },
+        }
+    </script>
+    <title>Crypto Prediction</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #272b34;
-            color: white;
-            margin: 0;
-            padding: 20px;
         }
-        h1 {
-            text-align: center;
-        }
-        form {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        #chart {
-            margin: 20px auto;
-            width: 80%;
-            height: 500px;
-        }
+        /* #prophet-plot, #historical-plot {
+            width: 1000px;
+            height: 600px;
+            margin-top: 20px;
+        } */
     </style>
-    <script src='https://cdn.plot.ly/plotly-latest.min.js' async></script>
 </head>
-<body>
-    <h1>Live Stock Price Prediction</h1>
-    <form method="POST">
-        <label for="symbol">Enter stock symbol (e.g., BTC-USD):</label>
-        <input type="text" id="symbol" name="symbol" value='BTC-USD' required>
-        <button type="submit">Predict</button>
+<body class="bg-slate-300 p-5 w-[1000px] md:w-full h-[700px] md:h-[500px] mt-5">
+
+    <div class="absolute top-5 right-5 flex items-center">
+        <a href="https://github.com/venkateshblks/CryptoPredictor" target="_blank" class="flex items-center bg-white text-black rounded-full p-2 hover:bg-gray-200 transition duration-200 ease-in-out">
+            <span class="[&>svg]:h-7 [&>svg]:w-7 [&>svg]:fill-[#333]">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
+                    <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z" />
+                </svg>
+            </span>
+            <span class="ml-2 text-lg font-medium">View My Code</span>
+        </a>
+    </div>
+
+    <h1 class=" font-extrabold  text-5xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl p-6 text-center">
+        <span class="block">
+            Crypto Prediction for
+            <span class="text-transparent bg-clip-text bg-gradient-to-tr to-cyan-500 from-blue-600">
+                {{  symbol if symbol else '' }}
+            </span>
+        </span>
+    </h1>
+    
+    <form method="POST" action="/" class="mb-5 flex flex-col md:flex-row items-center">
+        <div class="flex-grow">
+            <label for="symbol" class="block text-3xl md:text-2xl mb-3">Enter Crypto Symbol:</label>
+            <input type="text" id="symbol" name="symbol" required class="border rounded-md p-3 w-full  text-lg md:text-xl" placeholder="BTC-USD, ETH-USD, etc.">
+            <p class="mt-2 text-2xl md:text-lg text-gray-600">
+                Please check crypto symbols on <a href="https://finance.yahoo.com/markets/crypto/all/" class="text-blue-500 underline" target="_blank">this website</a>.
+            </p>
+        </div>
+        <button type="submit" class="m-4 w-1/4 md:w-1/4 bg-blue-500 text-white text-lg md:text-xl py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Submit</button>
     </form>
+    {% if error %}
+    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+        <span class="font-medium"></span>No data found for symbol. Please check the symbol and try again.
+      </div>
+    {% endif %}
+    
+    
+
+ 
+
+    <div class="mt-5">
+        <h2 class="text-xl font-bold mb-2">Trading Live Chart</h2>
+        <!-- <iframe src="https://livetrade-react.vercel.app/" class="w-[1000px] md:w-full h-[700px] md:h-[500px] mt-5 border rounded-md" title="Live Trading" scrolling="no"></iframe> -->
+    </div>
+ 
     {% if prophet_graphJSON %}
-        <div id='prophet-chart' class='chart' style="width: 100%; height: 600px;"></div>
-        <script type='text/javascript'>
-            var prophetGraph = {{ prophet_graphJSON | safe }};
-            Plotly.newPlot('prophet-chart', prophetGraph.data, prophetGraph.layout);
-        </script>
-    {% endif %}
+    <h1 class="mt-7 mb-4 text-4xl  leading-none tracking-tight text-gray-900 md:text-3xl lg:text-3xl dark:text-white text-center">Last 24 Hours - Historical Prices and Predictions</h1>
+<p class="mb-6 text-lg font-normal text-black-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Predictions are based on the last 5 days of trained data with a 5-minute timeframe. Please remember that crypto markets are unpredictable.</p>
+
     
-    
-    {% if historical_graphJSON %}
-        <div id='historical-chart' class='chart' style="width: 100%; height: 600px;"></div>
-        <script type='text/javascript'>
-            var historicalGraph = {{ historical_graphJSON | safe }};
-            Plotly.newPlot('historical-chart', historicalGraph.data, historicalGraph.layout);
-        </script>
+    <h2 class="text-xl font-bold mt-5 mb-2">Meta's Prophet Prediction Model</h2>
+    <div id="prophet-plot" class="w-[1000px] md:w-full h-[700px] md:h-[500px] my-5 ">
+    </div>
     {% endif %}
+    <!-- Loading Spinner -->
+    <div id="loading" class="hidden flex justify-center items-center mb-5">
+        <svg class="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <p>Training... LSTM Model</p>
+    </div>
+    
+    {% if symbol %}
+  
+    <h2 class="text-xl font-bold mt-20 mb-2">LSTM (Long Short-Term Memory) Prediction Model</h2>
+    <div id="historical-plot" class="w-[1000px] md:w-full h-[700px] md:h-[500px] mt-5 ">
+    </div>
+    
+    {% endif %}
+    <script>
+        const prophetData = JSON.parse('{{ prophet_graphJSON | safe }}');
+        Plotly.newPlot('prophet-plot', prophetData.data, prophetData.layout);
+    
+        // Only fetch historical data if the symbol exists
+        const symbol = "{{ symbol }}"; 
+        if (symbol) {
+            const historicalKey = `historical_${symbol}`;
+            const loadingSpinner = document.getElementById('loading');
+    
+            // Show loading spinner
+            loadingSpinner.classList.remove('hidden');
+    
+            // Check if historical data is already in session storage
+            const cachedData = sessionStorage.getItem(historicalKey);
+            const cachedTime = sessionStorage.getItem(`${historicalKey}_time`);
+    
+            const currentTime = new Date().getTime();
+            const isExpired = cachedTime && (currentTime - cachedTime > 4 * 60 * 1000); // 4 minutes
+    
+            if (cachedData && !isExpired) {
+                const historicalData = JSON.parse(cachedData);
+                Plotly.newPlot('historical-plot', historicalData.data, historicalData.layout);
+                loadingSpinner.classList.add('hidden'); // Hide loading spinner
+            } else {
+                // Clear expired data
+                if (isExpired) {
+                    sessionStorage.removeItem(historicalKey);
+                    sessionStorage.removeItem(`${historicalKey}_time`);
+                }
+    
+                fetch('/historical_plot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ symbol: symbol })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.historical_graphJSON) {
+                        const historicalData = JSON.parse(data.historical_graphJSON);
+                        Plotly.newPlot('historical-plot', historicalData.data, historicalData.layout);
+                        // Store the historical plot data and the timestamp in session storage
+                        sessionStorage.setItem(historicalKey, data.historical_graphJSON);
+                        sessionStorage.setItem(`${historicalKey}_time`, currentTime); // Store current timestamp
+                    } else {
+                        console.error('No historical graph data found.');
+                    }
+                })
+                .catch(error => console.error('Error fetching historical plot:', error))
+                .finally(() => {
+                    loadingSpinner.classList.add('hidden'); // Hide loading spinner
+                });
+            }
+        }
+    </script>
+    
 </body>
 </html>
