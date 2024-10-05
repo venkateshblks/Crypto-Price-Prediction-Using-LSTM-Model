@@ -16,9 +16,10 @@ from concurrent.futures import ThreadPoolExecutor
 import os
 executor = ThreadPoolExecutor(max_workers=2)
 app = Flask(__name__)
+import tensorflow as tf
 
 def fetch_data(symbol):
-    data = yf.download(symbol, period='5d', interval='5m')
+    data = yf.download(symbol, period='3mo', interval='1h')
     if data.empty:
         return 'error'
     data.reset_index(inplace=True)
@@ -40,7 +41,7 @@ def create_features(data):
 def predict_prophet(data):
     model = Prophet()
     model.fit(data)
-    future = model.make_future_dataframe(periods=37, freq='5min')
+    future = model.make_future_dataframe(periods=120, freq='1h')
     return model.predict(future)
 def create_prophet_plot(symbol):
     data = fetch_data(symbol)
@@ -50,8 +51,8 @@ def create_prophet_plot(symbol):
     df_prophet['ds'] = df_prophet['ds'].dt.tz_localize(None)
     
     prophet_forecast = predict_prophet(df_prophet)
-    df_prophet = df_prophet[df_prophet['ds'] >= (df_prophet['ds'].max() - timedelta(days=1))]
-    prophet_forecast = prophet_forecast[prophet_forecast['ds'] >= (prophet_forecast['ds'].max() - timedelta(hours=28))]
+    df_prophet = df_prophet[df_prophet['ds'] >= (df_prophet['ds'].max() - timedelta(days=30))]
+    prophet_forecast = prophet_forecast[prophet_forecast['ds'] >= (prophet_forecast['ds'].max() - timedelta(days=35))]
 
     prophet_fig = go.Figure()
     prophet_fig.add_trace(go.Scatter(x=df_prophet['ds'], y=df_prophet['y'], mode='lines', name='Historical Prices'))
@@ -81,13 +82,13 @@ def training_model(data):
     model.add(Dropout(0.2))
     model.add(Dense(1))
     model.compile(optimizer='adam', loss='mean_squared_error')
-    model.fit(X, dataset[10:], epochs=10, batch_size=16, verbose=0)
+    model.fit(X, dataset[10:], epochs=50, batch_size=16, verbose=0)
     return model, scaler, data
 
 def predict_next_prices(model, scaler, dataset):
-    last_sequence = dataset[-10:].reshape(1, 10, 1)
+    last_sequence = dataset[-24:].reshape(1, 24, 1)
     next_predictions = []
-    for _ in range(36):
+    for _ in range(120):
         next_price = model.predict(last_sequence, verbose=0)
         next_predictions.append(next_price[0, 0])
         next_sequence = np.array([[next_price[0, 0]]])
@@ -106,7 +107,7 @@ def historical_plot():
     model, scaler, data = training_model(data)
     
     next_predictions = predict_next_prices(model, scaler, data['Close'].values)  
-    df = df[df['Datetime'] >= (df['Datetime'].max() - timedelta(days=1))]
+    df = df[df['Datetime'] >= (df['Datetime'].max() - timedelta(days=30))]
 
     historical_fig = go.Figure()
     historical_fig.add_trace(go.Candlestick(
@@ -118,7 +119,7 @@ def historical_plot():
         name='Historical Prices',
     ))
 
-    future_dates = pd.date_range(start=data['Datetime'].iloc[-1] + pd.Timedelta(minutes=5), periods=36, freq='5min')
+    future_dates = pd.date_range(start=data['Datetime'].iloc[-1] + pd.Timedelta(hours=1), periods=120, freq='1h')
 
 
     # next_predictions=[61523.45703125, 61535.1171875, 61546.578125, 61558.66015625, 61573.515625, 61584.98828125, 61595.36328125, 61610.4140625, 61620.92578125, 61631.8203125, 61643.625, 61655.5234375, 61667.359375, 61679.14453125, 61690.88671875, 61702.5, 61714.1171875, 61725.765625, 61737.29296875, 61748.85546875, 61760.42578125, 61771.9765625, 61783.4921875, 61794.98828125, 61806.46484375, 61817.91796875, 61829.36328125, 61840.79296875, 61852.203125, 61863.6015625, 61874.984375, 61886.35546875, 61897.7109375, 61909.0546875, 61920.3828125, 61931.703125]

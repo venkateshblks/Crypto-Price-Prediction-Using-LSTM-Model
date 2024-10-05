@@ -6,4 +6,5 @@ scikit-learn
 plotly
 tensorflow-cpu
 prophet
+matplotlib
 
