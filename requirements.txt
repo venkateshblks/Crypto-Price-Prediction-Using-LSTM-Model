@@ -7,4 +7,5 @@ plotly
 tensorflow-cpu
 prophet
 matplotlib
+streamlit
 
