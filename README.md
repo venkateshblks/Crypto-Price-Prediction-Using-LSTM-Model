@@ -10,7 +10,7 @@ This project leverages a Long Short-Term Memory (LSTM) model to predict the next
 - **Easy Deployment**: Built with Flask, making it easy to run and deploy on various platforms.
 
 ## Demo
-Check out the live demo of the application [Click Here](https://married-jody-njnsdcns-ca3da3b3.koyeb.app/)
+Check out the live demo of the application <a href="https://married-jody-njnsdcns-ca3da3b3.koyeb.app/" target="_blank">[Click Here]</a>
 
 ## Screenshots
 
