@@ -12,9 +12,6 @@ This project leverages a Long Short-Term Memory (LSTM) model to predict the next
 ## Demo
 Check out the live demo of the application <a href="https://married-jody-njnsdcns-ca3da3b3.koyeb.app/" target="_blank">[Click Here]</a>
 
-## Screenshots
-
-
 ## Installation
 To set up the project locally, follow these steps or  simply use GitHub Codespaces and skip the cloning step.
 
@@ -41,6 +38,16 @@ Open your browser and go to http://127.0.0.1:5000/ to access the web app.
 2. Upon entering, you will be prompted to enter a cryptocurrency symbol.
 3. After entering the symbol, click submit. The application will train the model using the latest live data and provide predictions for the next 24 hours.
 4. Review the plots to visualize the predictions in relation to historical prices.
+
+
+
+## Screenshots
+
+![actual-predicted](https://github.com/user-attachments/assets/d8656a92-321c-44ee-a807-6ae7adad13d5)
+
+
+![crypto-screen](https://github.com/user-attachments/assets/f1f68a56-03ed-47d0-bac3-94e799d16e0e)
+
 
 
 ## Conclusion
