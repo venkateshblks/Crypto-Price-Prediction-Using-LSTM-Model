@@ -10,7 +10,9 @@ This project leverages a Long Short-Term Memory (LSTM) model to predict the next
 - **Easy Deployment**: Built with Flask, making it easy to run and deploy on various platforms.
 
 ## Demo
-Check out the live demo of the application <a href="https://married-jody-njnsdcns-ca3da3b3.koyeb.app/" target="_blank">[Click Here]</a>
+Check out the live demo of the application <a href="https://married-jody-njnsdcns-ca3da3b3.koyeb.app/" target="_blank">[Click Here]</a> (Flask)
+
+If the above website is not working, try this link : [Click Here](https://crypto-price-prediction-using-lstm-model.streamlit.app/) (streamlit)
 
 ## Installation
 To set up the project locally, follow these steps or  simply use GitHub Codespaces and skip the cloning step.
@@ -44,6 +46,12 @@ Open your browser and go to http://127.0.0.1:5000/ to access the web app.
 ## Screenshots
 
 ![actual-predicted](https://github.com/user-attachments/assets/d8656a92-321c-44ee-a807-6ae7adad13d5)
+
+<br>
+<br>
+<b>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------</b>
+<br>
+<br>
 
 
 ![crypto-screen](https://github.com/user-attachments/assets/f1f68a56-03ed-47d0-bac3-94e799d16e0e)
